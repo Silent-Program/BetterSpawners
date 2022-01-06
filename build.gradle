@@ -1,0 +1,25 @@
+plugins {
+	id "java"
+	id "com.github.johnrengelman.shadow" version "7.1.1"
+}
+
+group "me.silentprogram"
+version "1.0-SNAPSHOT"
+sourceCompatibility = JavaVersion.VERSION_16
+
+repositories {
+	mavenCentral()
+	maven {
+		url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+	}
+}
+
+dependencies {
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+	compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+	implementation "com.github.stefvanschie.inventoryframework:IF:0.10.3"
+}
+
+shadowJar {
+	relocate "com.github.stefvanschie.inventoryframework", "me.silentprogram.inventoryframework"
+}
