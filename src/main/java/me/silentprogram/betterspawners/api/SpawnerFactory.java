@@ -52,8 +52,6 @@ public class SpawnerFactory {
 		ItemStack item = new ItemStack(Material.SPAWNER);
 		List<String> lore = new ArrayList<>();
 		
-		if (item.getItemMeta() == null) return null;
-		
 		ItemMeta itemMeta = item.getItemMeta();
 		PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
 		
