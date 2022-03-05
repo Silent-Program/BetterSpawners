@@ -1,4 +1,5 @@
 # Project exclude paths
 /.gradle/
 /build/
-/build/classes/java/main/
+/bin/
+.vscode/settings.json
