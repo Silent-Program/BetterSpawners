@@ -20,6 +20,7 @@ public class MainCommand implements CommandExecutor {
 		this.plugin = plugin;
 		this.playerChestGuiMap = plugin.gui.getPlayerGuiMap();
 		plugin.getCommand("spawners").setExecutor(this);
+		plugin.getCommand("spawners").setTabCompleter(new MainCommandTabCompleter());
 	}
 	
 	@Override
@@ -30,7 +31,7 @@ public class MainCommand implements CommandExecutor {
 		
 		if (args.length > 0) {
 			if (commandSender.hasPermission("betterspawners.reload")) {
-				if (args[0].equals("reload")) {
+				if (args[0].equalsIgnoreCase("reload")) {
 					plugin.reloadConfig();
 					commandSender.sendMessage(ChatColor.AQUA + "Reloaded");
 					return true;
