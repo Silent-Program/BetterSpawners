@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -66,6 +67,7 @@ public class SpawnerGui {
 			if (event.getAction() != InventoryAction.PICKUP_ALL) return;
 			Player plr = (Player) event.getWhoClicked();
 			ItemStack itemStack = event.getCurrentItem();
+			if (checkInventoryForItem(plr.getInventory(), itemStack)) return;
 			if (plr.getInventory().firstEmpty() == -1) return;
 			List<ItemStack> itemList = new ArrayList<>();
 			if (dataConfig.getPlayerListMap().containsKey(guiPlr.getUniqueId()))
@@ -172,7 +174,7 @@ public class SpawnerGui {
 			plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
 			ItemStack item = xpItem.getItem();
 			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("Click to collect " + finalXp + "xp!");
+			meta.setDisplayName("Click to collect " + 0 + "xp!");
 			item.setItemMeta(meta);
 			gui.update();
 		});
@@ -225,6 +227,16 @@ public class SpawnerGui {
 					.setLastGen(itemData.get(plugin.LAST_GEN_KEY, PersistentDataType.LONG)));
 		}
 		return itemClassList;
+	}
+
+	private boolean checkInventoryForItem(Inventory playerInv, ItemStack itemStack){
+		for (ItemStack item : playerInv.getContents()){
+			if (item == null) continue;
+			ItemMeta meta = itemStack.getItemMeta();
+			if (meta == null) continue;
+			if (meta.equals(item.getItemMeta())) return true;
+		}
+		return false;
 	}
 	
 	public int calculateXp(Player plr){
