@@ -17,7 +17,7 @@ repositories {
 dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 	compileOnly "org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT"
-	implementation "com.github.stefvanschie.inventoryframework:IF:0.10.3"
+	implementation "com.github.stefvanschie.inventoryframework:IF:0.10.5"
 }
 
 shadowJar {
