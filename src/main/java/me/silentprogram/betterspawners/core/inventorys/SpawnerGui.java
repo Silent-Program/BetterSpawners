@@ -10,10 +10,12 @@ import me.silentprogram.betterspawners.BetterSpawners;
 import me.silentprogram.betterspawners.api.SpawnerFactory;
 import me.silentprogram.betterspawners.core.config.classes.Data;
 import me.silentprogram.betterspawners.core.config.classes.ItemClass;
+
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
@@ -76,6 +78,7 @@ public class SpawnerGui {
 			itemList.remove(resetItem(itemStack));
 			dataConfig.setPlayerList(guiPlr.getUniqueId(), getItemClassList(itemList));
 			plr.getInventory().addItem(itemStack);
+			pages.clear();
 			pages.populateWithItemStacks(itemList);
 			gui.update();
 		});
@@ -91,7 +94,7 @@ public class SpawnerGui {
 			if (!itemStack.hasItemMeta() || (!itemStack.hasItemMeta())) return;
 			PersistentDataContainer itemData = itemStack.getItemMeta().getPersistentDataContainer();
 			if (!itemData.has(plugin.ENTITY_TYPE_KEY, PersistentDataType.STRING)) return;
-			Player plr = (Player) event.getWhoClicked();
+			//Player plr = (Player) event.getWhoClicked();
 			//Permissions check for multiple spawners in gui
 			String group = "gui.groups.default-group";
 			for (String i : config.getConfigurationSection("gui.groups.custom-groups").getKeys(false)) {
@@ -144,7 +147,7 @@ public class SpawnerGui {
 		
 		ItemStack itemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
 		ItemMeta itemMeta = itemStack.getItemMeta();
-		itemMeta.setDisplayName("Click to collect " + xp + "xp!");
+		itemMeta.setDisplayName("Click to collect " + xp + " xp!");
 		itemStack.setItemMeta(itemMeta);
 		//Go forward item
 		ItemStack nextItem = new ItemStack(Material.GREEN_WOOL);
@@ -174,7 +177,7 @@ public class SpawnerGui {
 			plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
 			ItemStack item = xpItem.getItem();
 			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("Click to collect " + 0 + "xp!");
+			meta.setDisplayName("Click to collect " + 0 + " xp!");
 			item.setItemMeta(meta);
 			gui.update();
 		});
@@ -234,7 +237,7 @@ public class SpawnerGui {
 			if (item == null) continue;
 			ItemMeta meta = itemStack.getItemMeta();
 			if (meta == null) continue;
-			if (meta.equals(item.getItemMeta())) return true;
+			
 		}
 		return false;
 	}

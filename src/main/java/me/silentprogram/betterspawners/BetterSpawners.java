@@ -1,10 +1,13 @@
 package me.silentprogram.betterspawners;
 
+import me.silentprogram.betterspawners.core.commands.GiveCommand;
 import me.silentprogram.betterspawners.core.commands.MainCommand;
 import me.silentprogram.betterspawners.core.config.DataManager;
 import me.silentprogram.betterspawners.core.config.classes.Data;
 import me.silentprogram.betterspawners.core.inventorys.SpawnerGui;
 import me.silentprogram.betterspawners.core.listeners.SpawnerListener;
+
+
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,6 +33,7 @@ public class BetterSpawners extends JavaPlugin {
 		gui = new SpawnerGui(this);
 		new SpawnerListener(this);
 		new MainCommand(this);
+		new GiveCommand(this);
 	}
 	
 	@Override

@@ -7,3 +7,5 @@ description: Custom spawners plugin
 commands:
   spawners:
     description: Opens the spawner gui
+  givespawner:
+    description: Gives the player a spawner

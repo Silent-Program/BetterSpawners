@@ -52,6 +52,7 @@ public class MainCommand implements CommandExecutor {
 					}
 				}
 			}
+
 		}
 		gui = plugin.gui.createGui(plr);
 		playerChestGuiMap.put(plr, gui);
