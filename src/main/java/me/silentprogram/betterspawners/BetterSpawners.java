@@ -3,7 +3,7 @@ package me.silentprogram.betterspawners;
 import me.silentprogram.betterspawners.core.commands.MainCommand;
 import me.silentprogram.betterspawners.core.config.DataManager;
 import me.silentprogram.betterspawners.core.config.classes.Data;
-import me.silentprogram.betterspawners.core.inventorys.SpawnerGui;
+import me.silentprogram.betterspawners.core.inventorys.GuiManager;
 import me.silentprogram.betterspawners.core.listeners.SpawnerListener;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -17,7 +17,7 @@ public class BetterSpawners extends JavaPlugin {
 	public final NamespacedKey OWNER_KEY = new NamespacedKey(this, "bs.ownerName");
 	public final NamespacedKey XP_KEY = new NamespacedKey(this, "bs.xpAmount");
 	public final NamespacedKey LAST_GEN_KEY = new NamespacedKey(this, "bs.lastGen");
-	public SpawnerGui gui;
+	public GuiManager gui;
 	private Data dataConfig;
 	private DataManager dataManager;
 	
@@ -31,7 +31,7 @@ public class BetterSpawners extends JavaPlugin {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
 			dataManager.saveConfig();
 		}, 0, 6000);
-		gui = new SpawnerGui(this);
+		gui = new GuiManager(this);
 		new SpawnerListener(this);
 		new MainCommand(this);
 	}

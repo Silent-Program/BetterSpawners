@@ -21,18 +21,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SpawnerGui {
-	final int maxTime;
-	final int xpAmount;
-	BetterSpawners plugin;
-	Data dataConfig;
-	FileConfiguration config;
-	Map<Player, ChestGui> playerGuiMap = new HashMap<>();
+public class GuiManager {
+	private final int maxTime;
+	private final int xpAmount;
+	private final BetterSpawners plugin;
+	private final Data dataConfig;
+	private final FileConfiguration config;
+	private final Map<Player, ChestGui> playerGuiMap = new HashMap<>();
 	
-	public SpawnerGui(BetterSpawners plugin) {
+	public GuiManager(BetterSpawners plugin) {
 		this.plugin = plugin;
 		this.dataConfig = plugin.getDataConfig();
 		this.config = plugin.getConfig();
@@ -112,7 +115,7 @@ public class SpawnerGui {
 			ItemStack itemClone = itemStack.clone();
 			itemClone.setAmount(1);
 			itemList.add(itemClone);
-			for(ItemStack i : itemList){
+			for (ItemStack i : itemList) {
 				ItemMeta itemMeta2 = i.getItemMeta();
 				PersistentDataContainer itemData2 = itemMeta2.getPersistentDataContainer();
 				itemData2.set(plugin.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
@@ -242,7 +245,7 @@ public class SpawnerGui {
 		return itemClassList;
 	}
 	
-	public int calculateXp(Player plr){
+	public int calculateXp(Player plr) {
 		int xp = 0;
 		for (ItemClass i : dataConfig.getPlayerListMap().get(plr.getUniqueId())) {
 			long time = System.currentTimeMillis() - i.getLastGen();
