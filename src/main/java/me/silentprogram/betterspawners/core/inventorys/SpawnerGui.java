@@ -21,10 +21,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpawnerGui {
 	final int maxTime;
@@ -46,12 +44,13 @@ public class SpawnerGui {
 		//Create gui to be edited
 		ChestGui gui = new ChestGui(6, "Spawners");
 		//Creating the amount of XP to be used later
-		int xp = 0;
 		
 		if (!dataConfig.getPlayerListMap().containsKey(guiPlr.getUniqueId())) {
 			dataConfig.getPlayerListMap().put(guiPlr.getUniqueId(), new ArrayList<>());
 		}
-		xp = calculateXp(guiPlr);
+		
+		AtomicInteger xp = new AtomicInteger(calculateXp(guiPlr));
+		
 		//Create a pages pane to add to the gui
 		PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
 		//Create a list of the players spawners in config
@@ -66,15 +65,21 @@ public class SpawnerGui {
 			if (event.getAction() != InventoryAction.PICKUP_ALL) return;
 			Player plr = (Player) event.getWhoClicked();
 			ItemStack itemStack = event.getCurrentItem();
-			if (plr.getInventory().firstEmpty() == -1) return;
+			
+			if (plr.getInventory().firstEmpty() == -1) {
+				plr.sendMessage("Your inventory must be empty!");
+				return;
+			}
 			List<ItemStack> itemList = new ArrayList<>();
+			
 			if (dataConfig.getPlayerListMap().containsKey(guiPlr.getUniqueId()))
 				itemList = getItemList(guiPlr);
 			
 			itemList.remove(resetItem(itemStack));
 			dataConfig.setPlayerList(guiPlr.getUniqueId(), getItemClassList(itemList));
-			plr.getInventory().addItem(itemStack);
+			pages.clear();
 			pages.populateWithItemStacks(itemList);
+			plr.getInventory().addItem(itemStack);
 			gui.update();
 		});
 		//Add pages to the gui
@@ -89,7 +94,6 @@ public class SpawnerGui {
 			if (!itemStack.hasItemMeta() || (!itemStack.hasItemMeta())) return;
 			PersistentDataContainer itemData = itemStack.getItemMeta().getPersistentDataContainer();
 			if (!itemData.has(plugin.ENTITY_TYPE_KEY, PersistentDataType.STRING)) return;
-			Player plr = (Player) event.getWhoClicked();
 			//Permissions check for multiple spawners in gui
 			String group = "gui.groups.default-group";
 			for (String i : config.getConfigurationSection("gui.groups.custom-groups").getKeys(false)) {
@@ -108,6 +112,12 @@ public class SpawnerGui {
 			ItemStack itemClone = itemStack.clone();
 			itemClone.setAmount(1);
 			itemList.add(itemClone);
+			for(ItemStack i : itemList){
+				ItemMeta itemMeta2 = i.getItemMeta();
+				PersistentDataContainer itemData2 = itemMeta2.getPersistentDataContainer();
+				itemData2.set(plugin.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
+				i.setItemMeta(itemMeta2);
+			}
 			itemStack.setAmount(itemStack.getAmount() - 1);
 			dataConfig.setPlayerList(guiPlr.getUniqueId(), getItemClassList(itemList));
 			pages.populateWithItemStacks(itemList);
@@ -158,22 +168,25 @@ public class SpawnerGui {
 			}
 		}), 8, 0);
 		
-		int finalXp = xp;
 		GuiItem xpItem = new GuiItem(itemStack);
 		
 		xpItem.setAction(event -> {
 			event.setCancelled(true);
 			
 			Player plr = (Player) event.getWhoClicked();
-			plr.giveExp(finalXp);
+			
 			for (ItemClass i : dataConfig.getPlayerListMap().get(guiPlr.getUniqueId())) {
 				i.setLastGen(System.currentTimeMillis());
 			}
+			
+			plr.giveExp(xp.get());
+			xp.set(0);
 			plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
 			ItemStack item = xpItem.getItem();
 			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("Click to collect " + finalXp + "xp!");
+			meta.setDisplayName("Click to collect 0 xp!");
 			item.setItemMeta(meta);
+			
 			gui.update();
 		});
 		
@@ -183,6 +196,7 @@ public class SpawnerGui {
 		//End gui creation
 		return gui;
 	}
+	
 	
 	private List<ItemStack> getItemList(Player plr) {
 		List<ItemStack> items = new ArrayList<>();
@@ -198,6 +212,7 @@ public class SpawnerGui {
 		}
 		return items;
 	}
+	
 	
 	private ItemStack resetItem(ItemStack item) {
 		PersistentDataContainer itemData = item.getItemMeta().getPersistentDataContainer();

@@ -8,7 +8,7 @@ gui:
     default-group:
       spawner-amount: 3
       cansilk: false
-# Groups to be used in permissions, so betterspawners.group.(group)
+    # Groups to be used in permissions, so betterspawners.group.(group)
     custom-groups:
       vip:
         spawner-amount: 5

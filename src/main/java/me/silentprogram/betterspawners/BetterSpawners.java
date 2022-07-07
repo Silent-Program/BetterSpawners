@@ -5,6 +5,7 @@ import me.silentprogram.betterspawners.core.config.DataManager;
 import me.silentprogram.betterspawners.core.config.classes.Data;
 import me.silentprogram.betterspawners.core.inventorys.SpawnerGui;
 import me.silentprogram.betterspawners.core.listeners.SpawnerListener;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +23,7 @@ public class BetterSpawners extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
+		Metrics metrics = new Metrics(this, 15632);
 		dataManager = new DataManager(this);
 		dataConfig = dataManager.initializeConfig();
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
