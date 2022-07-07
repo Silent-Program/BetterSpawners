@@ -40,7 +40,7 @@ public class SpawnerListener implements Listener {
 		if (!plugin.getConfig().getBoolean(group + ".cansilk")) return;
 		
 		block.getWorld().dropItemNaturally(block.getLocation(),
-				new SpawnerFactory(plugin, spawner.getSpawnedType(), 2, plr.getName(), 0, System.currentTimeMillis()).getSpawner());
+				new SpawnerFactory(plugin, spawner.getSpawnedType(), plugin.getConfig().getInt("mined-multiplier"), plr.getName(), 0, System.currentTimeMillis()).getSpawner());
 		
 		event.setExpToDrop(0);
 	}

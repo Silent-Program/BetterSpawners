@@ -2,6 +2,8 @@
 xp-amount: 1
 #Max amount of time XP can be gained per-spawner (in hours)
 max-time: 1
+#Default multiplier when spawner is mined with silk touch
+mined-multiplier: 2
 gui:
   groups:
     #Use default group if user does not have any betterspawners.group.(group)
