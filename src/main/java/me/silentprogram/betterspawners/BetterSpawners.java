@@ -2,6 +2,7 @@ package me.silentprogram.betterspawners;
 
 import me.silentprogram.betterspawners.commands.MainCommand;
 import me.silentprogram.betterspawners.config.DataManager;
+import me.silentprogram.betterspawners.config.GroupsManager;
 import me.silentprogram.betterspawners.config.classes.Data;
 import me.silentprogram.betterspawners.listeners.SpawnerListener;
 import me.silentprogram.betterspawners.util.Keys;
@@ -14,8 +15,9 @@ import java.security.Key;
 
 public class BetterSpawners extends JavaPlugin {
     private DataManager dataManager;
+    private GroupsManager groupsManager;
     private Data dataConfig;
-    public static Keys KEYS;
+    public Keys KEYS;
     
     @Override
     public void onEnable() {
@@ -35,6 +37,10 @@ public class BetterSpawners extends JavaPlugin {
         return dataConfig;
     }
     
+    public GroupsManager getGroupsManager() {
+        return groupsManager;
+    }
+    
     //Startup below this comment
     private void startBstats(){
         Metrics metrics = new Metrics(this, 15632);
@@ -43,6 +49,7 @@ public class BetterSpawners extends JavaPlugin {
     
     private void configStartup(){
         dataManager = new DataManager(this);
+        groupsManager = new GroupsManager(this);
         dataConfig = dataManager.getConfig();
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             dataManager.saveConfig();

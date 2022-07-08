@@ -12,7 +12,9 @@ public class DataManager {
     private final ObjectMapper om = new ObjectMapper();
     private Data config;
     
-    //Initialize class by grabbing the config file
+    /**
+     * @param plugin Main plugin instance.
+     */
     public DataManager(BetterSpawners plugin) {
         configFile = new File(plugin.getDataFolder(), "data.json");
         initializeConfig();

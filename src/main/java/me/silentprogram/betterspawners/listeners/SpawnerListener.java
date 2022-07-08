@@ -1,6 +1,7 @@
 package me.silentprogram.betterspawners.listeners;
 
 import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.config.classes.Group;
 import me.silentprogram.betterspawners.util.Keys;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,12 +14,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Map;
+
 public class SpawnerListener implements Listener {
-    BetterSpawners plugin;
+    private final BetterSpawners plugin;
+    Map<String, Group> groupMap;
     
     public SpawnerListener(BetterSpawners plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.groupMap = plugin.getGroupsManager().getGroupMap();
     }
     
     @EventHandler
@@ -31,13 +36,13 @@ public class SpawnerListener implements Listener {
         
         if (!plr.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) return;
         String group = "gui.groups.default-group";
-        for (String i : plugin.getConfig().getConfigurationSection("gui.groups.custom-groups").getKeys(false)) {
+        for (String i : groupMap.keySet()) {
             if (plr.hasPermission("betterspawners.group." + i)) {
-                group = "gui.groups.custom-groups." + i;
+                group = i;
                 break;
             }
         }
-        if (!plugin.getConfig().getBoolean(group + ".cansilk")) return;
+        if (!groupMap.get(group).getCanSilk()) return;
         
         //block.getWorld().dropItemNaturally(block.getLocation(),
         //new SpawnerFactory(plugin, spawner.getSpawnedType(), plugin.getConfig().getInt("mined-multiplier"), plr.getName(), 0, System.currentTimeMillis()).getSpawner());
