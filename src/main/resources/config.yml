@@ -1,21 +1,23 @@
-#Amount of xp gained per-minute per-spawner
-xp-amount: 1
-#Max amount of time XP can be gained per-spawner (in hours)
-max-time: 1
-#Default multiplier when spawner is mined with silk touch
-mined-multiplier: 2
-gui:
-  groups:
-    #Use default group if user does not have any betterspawners.group.(group)
-    default-group:
-      spawner-amount: 3
-      cansilk: false
-    # Groups to be used in permissions, so betterspawners.group.(group)
-    custom-groups:
-      vip:
-        spawner-amount: 5
-        cansilk: true
+spawner-settings:
+  #Amount of xp gained per-minute per-spawner
+  xp-per-minute: 1
+  #Max amount of time XP can be gained per-spawner (in hours)
+  max-time-per-spawner: 1
+  #Default multiplier when spawner is mined with silk touch
+  mined-multiplier: 2
 
-      admin:
-        spawner-amount: 10
-        cansilk: true
+
+groups:
+  #Use default group if user does not have any betterspawners.group.(group)
+  default-group:
+    spawner-amount: 3
+    cansilk: false
+  # Groups to be used in permissions, so betterspawners.group.(group)
+  custom-groups:
+    vip:
+      spawner-amount: 5
+      cansilk: true
+
+    admin:
+      spawner-amount: 10
+      cansilk: true

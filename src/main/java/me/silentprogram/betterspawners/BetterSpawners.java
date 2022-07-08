@@ -2,20 +2,17 @@ package me.silentprogram.betterspawners;
 
 import me.silentprogram.betterspawners.commands.MainCommand;
 import me.silentprogram.betterspawners.config.DataManager;
-import me.silentprogram.betterspawners.config.GroupsManager;
+import me.silentprogram.betterspawners.config.ConfigManager;
 import me.silentprogram.betterspawners.config.classes.Data;
 import me.silentprogram.betterspawners.listeners.SpawnerListener;
 import me.silentprogram.betterspawners.util.Keys;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.security.Key;
 
 public class BetterSpawners extends JavaPlugin {
     private DataManager dataManager;
-    private GroupsManager groupsManager;
+    private ConfigManager configManager;
     private Data dataConfig;
     public Keys KEYS;
     
@@ -37,8 +34,8 @@ public class BetterSpawners extends JavaPlugin {
         return dataConfig;
     }
     
-    public GroupsManager getGroupsManager() {
-        return groupsManager;
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
     
     //Startup below this comment
@@ -49,7 +46,7 @@ public class BetterSpawners extends JavaPlugin {
     
     private void configStartup(){
         dataManager = new DataManager(this);
-        groupsManager = new GroupsManager(this);
+        configManager = new ConfigManager(this);
         dataConfig = dataManager.getConfig();
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
             dataManager.saveConfig();
