@@ -16,6 +16,7 @@ import java.util.List;
  * This class exists only to have static methods regarding custom spawner management.
  */
 public class SpawnerManager {
+    
     private static ItemStack createSpawner(BetterSpawners plugin, EntityType spawnerType, int multiplier, int xp, long lastGen, boolean isMined, String creatorName){
         ItemStack spawner = new ItemStack(Material.SPAWNER);
         List<String> lore = new ArrayList<>();
@@ -57,6 +58,15 @@ public class SpawnerManager {
         return spawner;
     }
     
+    /**
+     * Returns a custom spawner with custom properties.
+     * @param plugin Instance of main class.
+     * @param spawnerType Entity type used for spawner.
+     * @param multiplier Xp multiplier
+     * @param xp
+     * @param lastGen
+     * @return
+     */
     public static ItemStack createSpawner(BetterSpawners plugin, EntityType spawnerType, int multiplier, int xp, long lastGen){
         return createSpawner(plugin, spawnerType, multiplier, xp, lastGen, false, "");
     }
