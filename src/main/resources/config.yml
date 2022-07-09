@@ -21,3 +21,8 @@ groups:
     admin:
       spawner-amount: 10
       cansilk: true
+
+
+# All settings in this category are for the premium version of this plugin.
+# You are free to ignore them if you do not own the premium version.
+premium:

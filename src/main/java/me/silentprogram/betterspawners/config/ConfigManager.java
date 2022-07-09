@@ -17,7 +17,7 @@ public class ConfigManager {
     int xpPerMinute;
     int maxTimePerSpawner;
     
-    public ConfigManager(BetterSpawners plugin){
+    public ConfigManager(BetterSpawners plugin) {
         this.plugin = plugin;
         customGroupsSection = plugin.getConfig().getConfigurationSection("groups.custom-groups");
         spawnerSettingsSection = plugin.getConfig().getConfigurationSection("spawner-settings");
@@ -27,12 +27,12 @@ public class ConfigManager {
     /**
      * Resets groups map, and grabs all groups.
      */
-    private void getGroups(){
+    private void getGroups() {
         groupMap = new HashMap<>();
         for (String i : customGroupsSection.getKeys(false)) {
-            try{
+            try {
                 groupMap.put(i, new Group(i, customGroupsSection.getInt(i + ".spawner-amount"), customGroupsSection.getBoolean(i + ".cansilk")));
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Error getting group " + i + ".\n" + e);
             }
         }
@@ -54,7 +54,7 @@ public class ConfigManager {
      * @param plr The targetted player to get the group.
      * @return Returns the group the player has permissions for.
      */
-    private Group getPlayerGroup(Player plr){
+    private Group getPlayerGroup(Player plr) {
         String group = "default-group";
         for (String i : groupMap.keySet()) {
             if (plr.hasPermission("betterspawners.group." + i)) {
@@ -70,7 +70,7 @@ public class ConfigManager {
      * @param plr The target player.
      * @return Returns true if player can silk and false if not.
      */
-    public boolean canPlayerSilk(Player plr){
+    public boolean canPlayerSilk(Player plr) {
         return getPlayerGroup(plr).getCanSilk();
     }
     
@@ -79,14 +79,14 @@ public class ConfigManager {
      * @param plr Targeted player
      * @return Returns the players max spawner count.
      */
-    public int getSpawnerAmount(Player plr){
+    public int getSpawnerAmount(Player plr) {
         return getPlayerGroup(plr).getSpawnerAmount();
     }
     
     /**
      * Gets new values for all saved config entries.
      */
-    private void reloadConfig(){
+    private void reloadConfig() {
         getGroups();
         this.minedMultiplier = spawnerSettingsSection.getInt("mined-multiplier");
         this.xpPerMinute = spawnerSettingsSection.getInt("xp-per-minute");
