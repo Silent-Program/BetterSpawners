@@ -1,0 +1,9 @@
+name: Better_Spawners
+main: me.silentprogram.betterspawners.BetterSpawners
+version: 0.0.2
+api-version: 1.16
+description: Custom spawners plugin
+
+commands:
+  spawners:
+    description: Opens the spawner gui

@@ -16,7 +16,7 @@ public class DataManager {
      * @param plugin Main plugin instance.
      */
     public DataManager(BetterSpawners plugin) {
-        configFile = new File(plugin.getDataFolder(), "data.json");
+        configFile = new File(plugin.getPlugin().getDataFolder(), "data.json");
         initializeConfig();
     }
     

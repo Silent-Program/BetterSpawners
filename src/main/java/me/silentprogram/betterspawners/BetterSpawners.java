@@ -10,22 +10,26 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class BetterSpawners extends JavaPlugin {
+public class BetterSpawners{
+    
+    private final JavaPlugin plugin;
     private DataManager dataManager;
     private ConfigManager configManager;
     private Data dataConfig;
     public Keys KEYS;
     
-    @Override
+    public BetterSpawners(JavaPlugin plugin){
+        this.plugin = plugin;
+    }
+    
     public void onEnable() {
-        saveDefaultConfig();
+        plugin.saveDefaultConfig();
         startBstats();
         KEYS = new Keys(this);
         configStartup();
         initialize();
     }
     
-    @Override
     public void onDisable() {
         dataManager.saveConfig();
     }
@@ -40,15 +44,15 @@ public class BetterSpawners extends JavaPlugin {
     
     //Startup below this comment
     private void startBstats(){
-        Metrics metrics = new Metrics(this, 15632);
-        metrics.addCustomChart(new SimplePie("server_ip", () -> getServer().getIp() + ":" + getServer().getPort()));
+        Metrics metrics = new Metrics(plugin, 15632);
+        metrics.addCustomChart(new SimplePie("server_ip", () -> plugin.getServer().getIp() + ":" + plugin.getServer().getPort()));
     }
     
     private void configStartup(){
         dataManager = new DataManager(this);
         configManager = new ConfigManager(this);
         dataConfig = dataManager.getConfig();
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             dataManager.saveConfig();
         }, 0, 6000);
     }
@@ -58,4 +62,7 @@ public class BetterSpawners extends JavaPlugin {
         new MainCommand(this);
     }
     
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
 }

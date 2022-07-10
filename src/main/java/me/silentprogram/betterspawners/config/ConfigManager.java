@@ -19,8 +19,8 @@ public class ConfigManager {
     
     public ConfigManager(BetterSpawners plugin) {
         this.plugin = plugin;
-        customGroupsSection = plugin.getConfig().getConfigurationSection("groups.custom-groups");
-        spawnerSettingsSection = plugin.getConfig().getConfigurationSection("spawner-settings");
+        customGroupsSection = plugin.getPlugin().getConfig().getConfigurationSection("groups.custom-groups");
+        spawnerSettingsSection = plugin.getPlugin().getConfig().getConfigurationSection("spawner-settings");
         reloadConfig();
     }
     
@@ -37,7 +37,7 @@ public class ConfigManager {
             }
         }
         //Add the default section to the map.
-        ConfigurationSection defaultGroupSection = plugin.getConfig().getConfigurationSection("groups.default-group");
+        ConfigurationSection defaultGroupSection = plugin.getPlugin().getConfig().getConfigurationSection("groups.default-group");
         groupMap.put("default-group", new Group("default-group", defaultGroupSection.getInt("spawner-amount"), defaultGroupSection.getBoolean("cansilk")));
     }
     

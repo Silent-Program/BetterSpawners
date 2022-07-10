@@ -20,7 +20,7 @@ public class SpawnerListener implements Listener {
     
     public SpawnerListener(BetterSpawners plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
         this.configManager = plugin.getConfigManager();
     }
     
@@ -37,7 +37,7 @@ public class SpawnerListener implements Listener {
         configManager.canPlayerSilk(plr);
         
         block.getWorld().dropItemNaturally(block.getLocation(),
-                SpawnerManager.createSpawner(plugin, spawner.getSpawnedType(), plugin.getConfig().getInt("mined-multiplier"), System.currentTimeMillis(), plr.getName()));
+                SpawnerManager.createSpawner(plugin, spawner.getSpawnedType(), plugin.getPlugin().getConfig().getInt("mined-multiplier"), System.currentTimeMillis(), plr.getName()));
         
         event.setExpToDrop(0);
     }

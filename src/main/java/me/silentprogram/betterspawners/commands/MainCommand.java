@@ -17,7 +17,7 @@ public class MainCommand implements CommandExecutor {
     
     public MainCommand(BetterSpawners plugin) {
         this.plugin = plugin;
-        plugin.getCommand("spawners").setExecutor(this);
+        plugin.getPlugin().getCommand("spawners").setExecutor(this);
     }
     
     @Override
@@ -29,7 +29,7 @@ public class MainCommand implements CommandExecutor {
         if (args.length > 0) {
             if (commandSender.hasPermission("betterspawners.reload")) {
                 if (args[0].equals("reload")) {
-                    plugin.reloadConfig();
+                    plugin.getPlugin().reloadConfig();
                     commandSender.sendMessage(ChatColor.AQUA + "Reloaded");
                     return true;
                 }
