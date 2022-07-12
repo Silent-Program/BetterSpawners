@@ -1,12 +1,12 @@
 package me.silentprogram.betterspawners.util;
 
-import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.StartupClass;
 import org.bukkit.NamespacedKey;
 
 public class Keys {
-    private BetterSpawners plugin;
+    private StartupClass plugin;
     
-    public Keys(BetterSpawners plugin) {
+    public Keys(StartupClass plugin) {
         this.plugin = plugin;
     }
     

@@ -1,7 +1,7 @@
 package me.silentprogram.betterspawners.commands;
 
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.StartupClass;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,10 +12,9 @@ import org.bukkit.entity.Player;
 import java.util.Map;
 
 public class MainCommand implements CommandExecutor {
-    private final BetterSpawners plugin;
-    private Map<Player, ChestGui> playerChestGuiMap;
+    private final StartupClass plugin;
     
-    public MainCommand(BetterSpawners plugin) {
+    public MainCommand(StartupClass plugin) {
         this.plugin = plugin;
         plugin.getPlugin().getCommand("spawners").setExecutor(this);
     }
@@ -41,18 +40,11 @@ public class MainCommand implements CommandExecutor {
                     commandSender.sendMessage(ChatColor.AQUA + "That player does not exist!!");
                     return false;
                 }
-                if (playerChestGuiMap.containsKey(plr)) {
-                    //gui = playerChestGuiMap.get(plr);
-                    //if (gui.getViewers().size() > 0) {
-                    //gui.show((HumanEntity) commandSender);
-                    return true;
-                }
+                plugin.getPlugin().getGuiManager().showGui(plr, (Player) commandSender);
+                return true;
             }
         }
-        //}
-        //gui = plugin.gui.createGui(plr);
-        //playerChestGuiMap.put(plr, gui);
-        //gui.show((HumanEntity) commandSender);
+        plugin.getPlugin().getGuiManager().showGui(plr);
         return true;
     }
 }

@@ -1,5 +1,5 @@
 name: Better_Spawners
-main: me.silentprogram.betterspawners.BetterSpawners
+main: me.silentprogram.betterspawnersfree.BetterSpawners
 version: 0.0.2
 api-version: 1.16
 description: Custom spawners plugin

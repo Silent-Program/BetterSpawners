@@ -1,6 +1,6 @@
 package me.silentprogram.betterspawners.config;
 
-import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.classes.Group;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigManager {
-    private final BetterSpawners plugin;
+    private final StartupClass plugin;
     private final ConfigurationSection customGroupsSection;
     private final ConfigurationSection spawnerSettingsSection;
     private Map<String, Group> groupMap;
@@ -17,7 +17,7 @@ public class ConfigManager {
     int xpPerMinute;
     int maxTimePerSpawner;
     
-    public ConfigManager(BetterSpawners plugin) {
+    public ConfigManager(StartupClass plugin) {
         this.plugin = plugin;
         customGroupsSection = plugin.getPlugin().getConfig().getConfigurationSection("groups.custom-groups");
         spawnerSettingsSection = plugin.getPlugin().getConfig().getConfigurationSection("spawner-settings");

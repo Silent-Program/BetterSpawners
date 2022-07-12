@@ -1,6 +1,6 @@
 package me.silentprogram.betterspawners.listeners;
 
-import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.ConfigManager;
 import me.silentprogram.betterspawners.util.SpawnerManager;
 import org.bukkit.Material;
@@ -15,10 +15,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 public class SpawnerListener implements Listener {
-    private final BetterSpawners plugin;
+    private final StartupClass plugin;
     ConfigManager configManager;
     
-    public SpawnerListener(BetterSpawners plugin) {
+    public SpawnerListener(StartupClass plugin) {
         this.plugin = plugin;
         plugin.getPlugin().getServer().getPluginManager().registerEvents(this, plugin.getPlugin());
         this.configManager = plugin.getConfigManager();
@@ -33,8 +33,7 @@ public class SpawnerListener implements Listener {
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
         
         if (!plr.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) return;
-        
-        configManager.canPlayerSilk(plr);
+        if(!configManager.canPlayerSilk(plr)) return;
         
         block.getWorld().dropItemNaturally(block.getLocation(),
                 SpawnerManager.createSpawner(plugin, spawner.getSpawnedType(), plugin.getPlugin().getConfig().getInt("mined-multiplier"), System.currentTimeMillis(), plr.getName()));

@@ -8,21 +8,22 @@ import me.silentprogram.betterspawners.listeners.SpawnerListener;
 import me.silentprogram.betterspawners.util.Keys;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class BetterSpawners{
+public class StartupClass {
     
-    private final JavaPlugin plugin;
+    private final MainClass plugin;
     private DataManager dataManager;
     private ConfigManager configManager;
     private Data dataConfig;
     public Keys KEYS;
     
-    public BetterSpawners(JavaPlugin plugin){
+    public StartupClass(MainClass plugin) {
         this.plugin = plugin;
+        startup();
     }
     
-    public void onEnable() {
+    //Essentially just onEnable();
+    public void startup() {
         plugin.saveDefaultConfig();
         startBstats();
         KEYS = new Keys(this);
@@ -30,25 +31,17 @@ public class BetterSpawners{
         initialize();
     }
     
-    public void onDisable() {
+    //Essentially just onDisable();
+    public void shutdown() {
         dataManager.saveConfig();
     }
     
-    public Data getDataConfig() {
-        return dataConfig;
-    }
-    
-    public ConfigManager getConfigManager() {
-        return configManager;
-    }
-    
-    //Startup below this comment
-    private void startBstats(){
+    //Begin startup methods
+    private void startBstats() {
         Metrics metrics = new Metrics(plugin, 15632);
-        metrics.addCustomChart(new SimplePie("server_ip", () -> plugin.getServer().getIp() + ":" + plugin.getServer().getPort()));
     }
     
-    private void configStartup(){
+    private void configStartup() {
         dataManager = new DataManager(this);
         configManager = new ConfigManager(this);
         dataConfig = dataManager.getConfig();
@@ -57,12 +50,22 @@ public class BetterSpawners{
         }, 0, 6000);
     }
     
-    private void initialize(){
+    private void initialize() {
         new SpawnerListener(this);
         new MainCommand(this);
     }
     
-    public JavaPlugin getPlugin() {
+    //Begin encapsulation methods
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+    
+    public MainClass getPlugin() {
         return plugin;
     }
+    
+    public Data getDataConfig() {
+        return dataConfig;
+    }
+    
 }

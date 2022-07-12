@@ -1,6 +1,6 @@
 package me.silentprogram.betterspawners.util;
 
-import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.StartupClass;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class SpawnerManager {
     
-    private static ItemStack createSpawner(BetterSpawners plugin, EntityType spawnerType, int multiplier, long lastGen, boolean isMined, String creatorName) {
+    private static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, long lastGen, boolean isMined, String creatorName) {
         ItemStack spawner = new ItemStack(Material.SPAWNER);
         List<String> lore = new ArrayList<>();
         
@@ -65,7 +65,7 @@ public class SpawnerManager {
      * @param lastGen Last time xp was claimed for spawner.
      * @return Returns a spawner created from the properties provided.
      */
-    public static ItemStack createSpawner(BetterSpawners plugin, EntityType spawnerType, int multiplier, long lastGen) {
+    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, long lastGen) {
         return createSpawner(plugin, spawnerType, multiplier, lastGen, false, "");
     }
     
@@ -78,7 +78,7 @@ public class SpawnerManager {
      * @param creatorName The name of the player that mined this spawner.
      * @return Returns a spawner created from the properties provided.
      */
-    public static ItemStack createSpawner(BetterSpawners plugin, EntityType spawnerType, int multiplier, long lastGen, String creatorName) {
+    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, long lastGen, String creatorName) {
         return createSpawner(plugin, spawnerType, multiplier, lastGen, true, creatorName);
     }
 }

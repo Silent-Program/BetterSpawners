@@ -1,7 +1,7 @@
 package me.silentprogram.betterspawners.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.silentprogram.betterspawners.BetterSpawners;
+import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.classes.Data;
 
 import java.io.File;
@@ -15,7 +15,7 @@ public class DataManager {
     /**
      * @param plugin Main plugin instance.
      */
-    public DataManager(BetterSpawners plugin) {
+    public DataManager(StartupClass plugin) {
         configFile = new File(plugin.getPlugin().getDataFolder(), "data.json");
         initializeConfig();
     }
