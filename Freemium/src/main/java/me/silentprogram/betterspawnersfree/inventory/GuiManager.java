@@ -30,7 +30,7 @@ public class GuiManager extends GuiManagerAbstract {
         this.dataConfig = plugin.getDataConfig();
     }
     
-    private ChestGui createGui(Player guiPlr){
+    private ChestGui createGui(Player guiPlr) {
         ChestGui gui = new ChestGui(6, "Spawners");
         //Create a pages pane to add to the gui
         PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
@@ -43,12 +43,14 @@ public class GuiManager extends GuiManagerAbstract {
             event.setCancelled(true);
             if (event.getAction() != InventoryAction.PICKUP_ALL) return;
             Player plr = (Player) event.getWhoClicked();
+            plr.sendMessage("hi");
             ItemStack itemStack = event.getCurrentItem();
-        
+            
             if (plr.getInventory().firstEmpty() == -1) {
                 plr.sendMessage("Your inventory must be empty!");
                 return;
             }
+            
             firstList.remove(itemStack);
             dataConfig.putPlayerItems(guiPlr.getUniqueId(), firstList);
             pages.clear();
@@ -58,7 +60,7 @@ public class GuiManager extends GuiManagerAbstract {
         });
         //Add pages to the gui
         gui.addPane(pages);
-    
+        
         //Set actions for when the player clicks on his/her own inventory
         gui.setOnBottomClick(event -> {
             event.setCancelled(true);
@@ -70,22 +72,26 @@ public class GuiManager extends GuiManagerAbstract {
             if (!itemData.has(plugin.KEYS.ENTITY_TYPE_KEY, PersistentDataType.STRING)) return;
             //Permissions check for multiple spawners in gui
             int itemAmount = pages.getItems().size() + 1;
-            if(plugin.getConfigManager().getSpawnerAmount((Player) event.getWhoClicked()) < itemAmount) {
+            if (plugin.getConfigManager().getSpawnerAmount((Player) event.getWhoClicked()) < itemAmount) {
                 itemAmount--;
                 event.getWhoClicked().sendMessage("You may only put " + itemAmount + " spawners in storage!");
+                return;
             }
-        
-            List<ItemStack> itemList = new ArrayList<>();
-            
+            //Handle item being put into spawner storage.
+            List<ItemStack> itemList = dataConfig.getPlayerItems(guiPlr.getUniqueId());
+            //Modify items PDI
             ItemStack itemClone = itemStack.clone();
             itemClone.setAmount(1);
+            ItemMeta itemMeta2 = itemClone.getItemMeta();
+            PersistentDataContainer itemData2 = itemMeta2.getPersistentDataContainer();
+            itemData2.set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
+            itemClone.setItemMeta(itemMeta2);
+            //Put item into data storage
+            guiPlr.sendMessage(itemList.toString());
             itemList.add(itemClone);
-            for(ItemStack i : itemList){
-                ItemMeta itemMeta2 = i.getItemMeta();
-                PersistentDataContainer itemData2 = itemMeta2.getPersistentDataContainer();
-                itemData2.set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
-                i.setItemMeta(itemMeta2);
-            }
+            guiPlr.sendMessage(itemList.toString());
+            dataConfig.putPlayerItems(guiPlr.getUniqueId(), itemList);
+            
             itemStack.setAmount(itemStack.getAmount() - 1);
             pages.populateWithItemStacks(itemList);
             gui.update();
@@ -96,9 +102,9 @@ public class GuiManager extends GuiManagerAbstract {
         background.setRepeat(true);
         background.setPriority(Pane.Priority.LOWEST);
         background.setOnClick(event -> event.setCancelled(true));
-    
+        
         gui.addPane(background);
-    
+        
         //Create a new pane for the navigation items
         StaticPane navigation = new StaticPane(0, 5, 9, 1);
         //Go back a page item
@@ -110,14 +116,14 @@ public class GuiManager extends GuiManagerAbstract {
             event.setCancelled(true);
             if (pages.getPage() > 0) {
                 pages.setPage(pages.getPage() - 1);
-            
+                
                 gui.update();
             }
         }), 0, 0);
         
         //Fix this later
-    
-  
+        
+        
         //Go forward item
         ItemStack nextItem = new ItemStack(Material.GREEN_WOOL);
         ItemMeta nextItemMeta = nextItem.getItemMeta();
@@ -127,7 +133,7 @@ public class GuiManager extends GuiManagerAbstract {
             event.setCancelled(true);
             if (pages.getPage() < pages.getPages() - 1) {
                 pages.setPage(pages.getPage() + 1);
-            
+                
                 gui.update();
             }
         }), 8, 0);
@@ -137,25 +143,25 @@ public class GuiManager extends GuiManagerAbstract {
         itemMeta.setDisplayName("Click to collect  + xp!");
         itemStack.setItemMeta(itemMeta);
         GuiItem xpItem = new GuiItem(itemStack);
-    
+        
         xpItem.setAction(event -> {
             event.setCancelled(true);
-        
+            
             Player plr = (Player) event.getWhoClicked();
-        
-        
+            
+            
             plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
             ItemStack item = xpItem.getItem();
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName("Click to collect 0 xp!");
             item.setItemMeta(meta);
             
-        
+            
             gui.update();
         });
-    
+        
         navigation.addItem(xpItem, 4, 0);
-    
+        
         gui.addPane(navigation);
         //End gui creation
         return gui;

@@ -84,6 +84,27 @@ public class ConfigManager {
     }
     
     /**
+     * @return Returns the config entry for max time
+     */
+    public int getMaxTimePerSpawner() {
+        return maxTimePerSpawner;
+    }
+    
+    /**
+     * @return Returns the config entry for mined multiplier
+     */
+    public int getMinedMultiplier() {
+        return minedMultiplier;
+    }
+    
+    /**
+     * @return Returns the config entry for XpPerMinute
+     */
+    public int getXpPerMinute() {
+        return xpPerMinute;
+    }
+    
+    /**
      * Gets new values for all saved config entries.
      */
     private void reloadConfig() {
@@ -92,4 +113,5 @@ public class ConfigManager {
         this.xpPerMinute = spawnerSettingsSection.getInt("xp-per-minute");
         this.maxTimePerSpawner = spawnerSettingsSection.getInt("max-time-per-spawner");
     }
+    
 }

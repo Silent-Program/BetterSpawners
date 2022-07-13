@@ -13,12 +13,13 @@ public class StartupClass {
     private final MainClass plugin;
     private DataManager dataManager;
     private ConfigManager configManager;
-    private Data dataConfig;
+    private final Data dataConfig;
     public Keys KEYS;
     
     public StartupClass(MainClass plugin) {
         this.plugin = plugin;
         startup();
+        dataConfig = dataManager.getConfig();
     }
     
     //Essentially just onEnable();
@@ -43,7 +44,6 @@ public class StartupClass {
     private void configStartup() {
         dataManager = new DataManager(this);
         configManager = new ConfigManager(this);
-        dataConfig = dataManager.getConfig();
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             dataManager.saveConfig();
         }, 0, 6000);
