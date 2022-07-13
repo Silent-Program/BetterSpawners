@@ -7,6 +7,7 @@ import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.silentprogram.betterspawners.StartupClass;
+import me.silentprogram.betterspawners.config.classes.Data;
 import me.silentprogram.betterspawners.interfaces.GuiManagerAbstract;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -21,10 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiManager extends GuiManagerAbstract {
-    StartupClass plugin;
+    private final StartupClass plugin;
+    private final Data dataConfig;
     
     public GuiManager(StartupClass plugin) {
         this.plugin = plugin;
+        this.dataConfig = plugin.getDataConfig();
     }
     
     private ChestGui createGui(Player guiPlr){
@@ -32,7 +35,9 @@ public class GuiManager extends GuiManagerAbstract {
         //Create a pages pane to add to the gui
         PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
         //Create a list of the players spawners in config
+        List<ItemStack> firstList = dataConfig.getPlayerItems(guiPlr.getUniqueId());
         //Add these items to the pages
+        pages.populateWithItemStacks(firstList);
         //Set click functionality
         pages.setOnClick(event -> {
             event.setCancelled(true);
@@ -44,10 +49,10 @@ public class GuiManager extends GuiManagerAbstract {
                 plr.sendMessage("Your inventory must be empty!");
                 return;
             }
-            List<ItemStack> itemList = new ArrayList<>();
-            
+            firstList.remove(itemStack);
+            dataConfig.putPlayerItems(guiPlr.getUniqueId(), firstList);
             pages.clear();
-            pages.populateWithItemStacks(itemList);
+            pages.populateWithItemStacks(firstList);
             plr.getInventory().addItem(itemStack);
             gui.update();
         });
@@ -60,11 +65,15 @@ public class GuiManager extends GuiManagerAbstract {
             if (event.getAction() != InventoryAction.PICKUP_ALL) return;
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() != Material.SPAWNER) return;
             ItemStack itemStack = event.getCurrentItem();
-            if (!itemStack.hasItemMeta() || (!itemStack.hasItemMeta())) return;
+            if (itemStack.getItemMeta() == null || (!itemStack.hasItemMeta())) return;
             PersistentDataContainer itemData = itemStack.getItemMeta().getPersistentDataContainer();
             if (!itemData.has(plugin.KEYS.ENTITY_TYPE_KEY, PersistentDataType.STRING)) return;
             //Permissions check for multiple spawners in gui
             int itemAmount = pages.getItems().size() + 1;
+            if(plugin.getConfigManager().getSpawnerAmount((Player) event.getWhoClicked()) < itemAmount) {
+                itemAmount--;
+                event.getWhoClicked().sendMessage("You may only put " + itemAmount + " spawners in storage!");
+            }
         
             List<ItemStack> itemList = new ArrayList<>();
             
@@ -108,10 +117,7 @@ public class GuiManager extends GuiManagerAbstract {
         
         //Fix this later
     
-        ItemStack itemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("Click to collect  + xp!");
-        itemStack.setItemMeta(itemMeta);
+  
         //Go forward item
         ItemStack nextItem = new ItemStack(Material.GREEN_WOOL);
         ItemMeta nextItemMeta = nextItem.getItemMeta();
@@ -125,7 +131,11 @@ public class GuiManager extends GuiManagerAbstract {
                 gui.update();
             }
         }), 8, 0);
-    
+        
+        ItemStack itemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName("Click to collect  + xp!");
+        itemStack.setItemMeta(itemMeta);
         GuiItem xpItem = new GuiItem(itemStack);
     
         xpItem.setAction(event -> {
@@ -139,6 +149,7 @@ public class GuiManager extends GuiManagerAbstract {
             ItemMeta meta = item.getItemMeta();
             meta.setDisplayName("Click to collect 0 xp!");
             item.setItemMeta(meta);
+            
         
             gui.update();
         });
@@ -152,11 +163,11 @@ public class GuiManager extends GuiManagerAbstract {
     
     @Override
     public void showGui(Player target, Player viewer) {
-    
+        createGui(target).show(viewer);
     }
     
     @Override
     public void showGui(Player plr) {
-        plr.sendMessage("Hi");
+        createGui(plr).show(plr);
     }
 }

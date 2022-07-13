@@ -1,6 +1,6 @@
 plugins {
-	id "java"
-	id "com.github.johnrengelman.shadow" version "7.1.1"
+    id "java"
+    id "com.github.johnrengelman.shadow"  version "7.1.1"
 }
 
 group "me.silentprogram"
@@ -8,21 +8,33 @@ version "1.0-SNAPSHOT"
 sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
-	mavenCentral()
-	maven {
-		url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-	}
+    mavenCentral()
+    maven {
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
 }
+subprojects {
+    apply plugin: 'java'
 
+    repositories {
+        mavenCentral()
+        maven {
+            url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        }
+    }
+
+    dependencies {
+        implementation 'org.bstats:bstats-bukkit:3.0.0'
+        compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
+        implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
+    }
+}
 dependencies {
-	implementation 'org.bstats:bstats-bukkit:3.0.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
-	implementation 'com.google.code.gson:gson:2.9.0'
-	compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
-	implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
+    implementation 'org.bstats:bstats-bukkit:3.0.0'
+    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
+    implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
 }
-
 shadowJar {
-	relocate "com.github.stefvanschie.inventoryframework", "me.silentprogram.inventoryframework"
-	relocate "org.bstats", "me.silentprogram.bstats"
+    relocate "com.github.stefvanschie.inventoryframework", "me.silentprogram.inventoryframework"
+    relocate "org.bstats", "me.silentprogram.bstats"
 }

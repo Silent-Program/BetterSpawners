@@ -1,0 +1,12 @@
+plugins{
+    id "com.github.johnrengelman.shadow"
+}
+
+dependencies {
+    implementation rootProject
+}
+
+shadowJar {
+    relocate "com.github.stefvanschie.inventoryframework", "me.silentprogram.inventoryframework"
+    relocate "org.bstats", "me.silentprogram.bstats"
+}

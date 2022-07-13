@@ -1,15 +1,18 @@
 package me.silentprogram.betterspawners.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.classes.Data;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class DataManager {
     private final File configFile;
-    private final ObjectMapper om = new ObjectMapper();
+    private FileWriter fileWriter;
+    private final Gson gson = new Gson();
     private Data config;
     
     /**
@@ -17,6 +20,14 @@ public class DataManager {
      */
     public DataManager(StartupClass plugin) {
         configFile = new File(plugin.getPlugin().getDataFolder(), "data.json");
+        System.out.println("1");
+        try {
+            fileWriter = new FileWriter(configFile);
+            System.out.println("2");
+        }catch(IOException e){
+            e.printStackTrace();
+            System.out.println("err");
+        }
         initializeConfig();
     }
     
@@ -24,12 +35,16 @@ public class DataManager {
      * Should only be used by this class to grab/create the config
      */
     private void initializeConfig() {
+        
         try {
             if (!configFile.exists()) {
-                om.writeValue(configFile, new Data());
+                gson.toJson(new Data(), fileWriter);
+                System.out.println("4");
             }
-            config = om.readValue(configFile, Data.class);
+            config = gson.fromJson(new FileReader(configFile), Data.class);
+            System.out.println("5");
         } catch (IOException e) {
+            System.out.println("6");
             e.printStackTrace();
         }
     }
@@ -46,10 +61,7 @@ public class DataManager {
      * Saves the config.
      */
     public void saveConfig() {
-        try {
-            om.writeValue(configFile, config);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gson.toJson(config, fileWriter);
+        System.out.println("7");
     }
 }

@@ -7,7 +7,6 @@ import me.silentprogram.betterspawners.config.classes.Data;
 import me.silentprogram.betterspawners.listeners.SpawnerListener;
 import me.silentprogram.betterspawners.util.Keys;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
 
 public class StartupClass {
     
