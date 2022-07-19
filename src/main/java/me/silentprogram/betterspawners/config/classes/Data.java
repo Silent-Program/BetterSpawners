@@ -19,7 +19,7 @@ public class Data {
         if (!playerListMap.containsKey(playerUUID) || playerListMap.get(playerUUID) == null || playerListMap.get(playerUUID).length() == 0) {
             return new ArrayList<>();
         }
-        return List.of(SerializationUtils.deserialize(playerListMap.get(playerUUID)).clone());
+        return new ArrayList<>(SerializationUtils.deserialize(playerListMap.get(playerUUID)));
     }
     
     /**
@@ -29,7 +29,7 @@ public class Data {
      */
     public void putPlayerItems(UUID playerUUID, List<ItemStack> items) {
         if(items == null) items = new ArrayList<>();
-        playerListMap.put(playerUUID, SerializationUtils.serialize(items.toArray(new ItemStack[0])));
+        playerListMap.put(playerUUID, SerializationUtils.serialize(items));
     }
     
 }

@@ -21,7 +21,7 @@ public class ConfigManager {
         this.plugin = plugin;
         customGroupsSection = plugin.getPlugin().getConfig().getConfigurationSection("groups.custom-groups");
         spawnerSettingsSection = plugin.getPlugin().getConfig().getConfigurationSection("spawner-settings");
-        reloadConfig();
+        reloadConfigManager();
     }
     
     /**
@@ -107,7 +107,8 @@ public class ConfigManager {
     /**
      * Gets new values for all saved config entries.
      */
-    private void reloadConfig() {
+    public void reloadConfigManager() {
+        plugin.getPlugin().reloadConfig();
         getGroups();
         this.minedMultiplier = spawnerSettingsSection.getInt("mined-multiplier");
         this.xpPerMinute = spawnerSettingsSection.getInt("xp-per-minute");

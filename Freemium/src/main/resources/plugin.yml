@@ -1,8 +1,8 @@
 name: Better_Spawners
 main: me.silentprogram.betterspawnersfree.BetterSpawners
-version: 0.0.2
+version: 1.0.0
 api-version: 1.16
-description: Custom spawners plugin
+description: Custom lag-free spawners plugin.
 
 commands:
   spawners:

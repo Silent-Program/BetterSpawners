@@ -8,8 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 public class MainCommand implements CommandExecutor {
     private final StartupClass plugin;
@@ -20,7 +19,7 @@ public class MainCommand implements CommandExecutor {
     }
     
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender,@NotNull Command command,@NotNull String s, String[] args) {
         if (!(commandSender instanceof Player)) return false;
         ChestGui gui;
         Player plr = (Player) commandSender;
@@ -28,7 +27,7 @@ public class MainCommand implements CommandExecutor {
         if (args.length > 0) {
             if (commandSender.hasPermission("betterspawners.reload")) {
                 if (args[0].equals("reload")) {
-                    plugin.getPlugin().reloadConfig();
+                    plugin.getConfigManager().reloadConfigManager();
                     commandSender.sendMessage(ChatColor.AQUA + "Reloaded");
                     return true;
                 }

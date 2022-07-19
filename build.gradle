@@ -31,6 +31,7 @@ subprojects {
 }
 dependencies {
     implementation 'org.bstats:bstats-bukkit:3.0.0'
+    implementation 'org.jetbrains:annotations:20.1.0'
     compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
     implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.6'
 }

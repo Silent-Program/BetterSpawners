@@ -7,21 +7,25 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class SerializationUtils {
     /**
      * This method serializes a itemstack array into a string to be stored
-     * @param itemArray The array to serialize.
+     * @param itemList The array to serialize.
      * @return Returns a serialized string from the passed array.
      */
-    public static String serialize(ItemStack[] itemArray) {
+    public static String serialize(List<ItemStack> itemList) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)) {
-            
+            ItemStack[] itemArray = new ItemStack[itemList.size()];
+            itemList.toArray(itemArray);
             
             dataOutput.writeInt(itemArray.length);
-            
-            for (int i = 0; i < itemArray.length; i++) {
-                dataOutput.writeObject(itemArray[i]);
+    
+            for (ItemStack itemStack : itemArray) {
+                dataOutput.writeObject(itemStack);
             }
             return Base64Coder.encodeLines(outputStream.toByteArray());
         } catch (Exception e) {
@@ -34,17 +38,16 @@ public class SerializationUtils {
      * @param str The serialized string to deserialize.
      * @return Returns a deserialized ItemStack array.
      */
-    public static ItemStack[] deserialize(String str) {
+    public static List<ItemStack> deserialize(String str) {
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(str)); BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
             ItemStack[] items = new ItemStack[dataInput.readInt()];
             
             for (int i = 0; i < items.length; i++) {
                 items[i] = (ItemStack) dataInput.readObject();
             }
-            
-            return items;
+            return Arrays.asList(items);
         } catch (Exception e) {
-            return new ItemStack[0];
+            return new ArrayList<>();
         }
     }
 }

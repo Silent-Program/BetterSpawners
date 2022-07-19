@@ -9,6 +9,7 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.classes.Data;
 import me.silentprogram.betterspawners.interfaces.GuiManagerAbstract;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GuiManager extends GuiManagerAbstract {
     private final StartupClass plugin;
@@ -30,8 +31,15 @@ public class GuiManager extends GuiManagerAbstract {
         this.dataConfig = plugin.getDataConfig();
     }
     
-    private ChestGui createGui(Player guiPlr) {
+    public ChestGui createGui(Player guiPlr) {
         ChestGui gui = new ChestGui(6, "Spawners");
+        //Create the XP bottle up here to be used in many places
+        ItemStack xpItemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        ItemMeta itemMeta = xpItemStack.getItemMeta();
+        
+        itemMeta.setDisplayName("Click to collect " + getXp(guiPlr) + "xp!");
+        xpItemStack.setItemMeta(itemMeta);
+        GuiItem xpItem = new GuiItem(xpItemStack);
         //Create a pages pane to add to the gui
         PaginatedPane pages = new PaginatedPane(0, 0, 9, 5);
         //Create a list of the players spawners in config
@@ -43,7 +51,6 @@ public class GuiManager extends GuiManagerAbstract {
             event.setCancelled(true);
             if (event.getAction() != InventoryAction.PICKUP_ALL) return;
             Player plr = (Player) event.getWhoClicked();
-            plr.sendMessage("hi");
             ItemStack itemStack = event.getCurrentItem();
             
             if (plr.getInventory().firstEmpty() == -1) {
@@ -55,6 +62,11 @@ public class GuiManager extends GuiManagerAbstract {
             dataConfig.putPlayerItems(guiPlr.getUniqueId(), firstList);
             pages.clear();
             pages.populateWithItemStacks(firstList);
+            //Update XP bottle xp amount.
+            ItemMeta xpItemMeta = xpItem.getItem().getItemMeta();
+            xpItemMeta.setDisplayName("Click to collect " + getXp(guiPlr) + "xp!");
+            xpItem.getItem().setItemMeta(xpItemMeta);
+            
             plr.getInventory().addItem(itemStack);
             gui.update();
         });
@@ -71,10 +83,9 @@ public class GuiManager extends GuiManagerAbstract {
             PersistentDataContainer itemData = itemStack.getItemMeta().getPersistentDataContainer();
             if (!itemData.has(plugin.KEYS.ENTITY_TYPE_KEY, PersistentDataType.STRING)) return;
             //Permissions check for multiple spawners in gui
-            int itemAmount = pages.getItems().size() + 1;
+            int itemAmount = pages.getItems().size();
             if (plugin.getConfigManager().getSpawnerAmount((Player) event.getWhoClicked()) < itemAmount) {
-                itemAmount--;
-                event.getWhoClicked().sendMessage("You may only put " + itemAmount + " spawners in storage!");
+                event.getWhoClicked().sendMessage("You may only put " + plugin.getConfigManager().getSpawnerAmount((Player) event.getWhoClicked()) + " spawners in storage!");
                 return;
             }
             //Handle item being put into spawner storage.
@@ -87,15 +98,21 @@ public class GuiManager extends GuiManagerAbstract {
             itemData2.set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
             itemClone.setItemMeta(itemMeta2);
             //Put item into data storage
-            guiPlr.sendMessage(itemList.toString());
             itemList.add(itemClone);
-            guiPlr.sendMessage(itemList.toString());
             dataConfig.putPlayerItems(guiPlr.getUniqueId(), itemList);
             
+            ItemMeta xpItemMeta = xpItem.getItem().getItemMeta();
+            xpItemMeta.setDisplayName("Click to collect " + getXp(guiPlr) + "xp!");
             itemStack.setAmount(itemStack.getAmount() - 1);
             pages.populateWithItemStacks(itemList);
             gui.update();
         });
+        //Set functionality on gui close.
+        gui.setOnClose(event -> {
+            if(gui.getViewers().size() > 1) return;
+            removeGuiFromList(guiPlr);
+        });
+        
         //Create a new pane for the background to fill it with black stained glass
         OutlinePane background = new OutlinePane(0, 5, 9, 1);
         background.addItem(new GuiItem(new ItemStack(Material.BLACK_STAINED_GLASS_PANE)));
@@ -138,17 +155,14 @@ public class GuiManager extends GuiManagerAbstract {
             }
         }), 8, 0);
         
-        ItemStack itemStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("Click to collect  + xp!");
-        itemStack.setItemMeta(itemMeta);
-        GuiItem xpItem = new GuiItem(itemStack);
         
         xpItem.setAction(event -> {
             event.setCancelled(true);
             
             Player plr = (Player) event.getWhoClicked();
             
+            int newXp = getXp(guiPlr);
+            if (newXp == 0) return;
             
             plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
             ItemStack item = xpItem.getItem();
@@ -156,7 +170,13 @@ public class GuiManager extends GuiManagerAbstract {
             meta.setDisplayName("Click to collect 0 xp!");
             item.setItemMeta(meta);
             
+            List<ItemStack> itemStacks = dataConfig.getPlayerItems(guiPlr.getUniqueId());
+            for (ItemStack i : itemStacks) {
+                i.getItemMeta().getPersistentDataContainer().set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
+            }
+            dataConfig.putPlayerItems(guiPlr.getUniqueId(), itemStacks);
             
+            plr.giveExp(newXp);
             gui.update();
         });
         
@@ -169,11 +189,23 @@ public class GuiManager extends GuiManagerAbstract {
     
     @Override
     public void showGui(Player target, Player viewer) {
-        createGui(target).show(viewer);
+        getGuiFromUUID(target).show(viewer);
     }
     
     @Override
     public void showGui(Player plr) {
-        createGui(plr).show(plr);
+        getGuiFromUUID(plr).show(plr);
+    }
+    
+    private int getXp(Player plr) {
+        int xp = 0;
+        for (ItemStack i : dataConfig.getPlayerItems(plr.getUniqueId())) {
+            long time = System.currentTimeMillis() - i.getItemMeta().getPersistentDataContainer().get(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG);
+            time /= 60000;
+            if (time > plugin.getConfigManager().getMaxTimePerSpawner())
+                time = plugin.getConfigManager().getMaxTimePerSpawner();
+            xp = xp + (int) ((time * plugin.getConfigManager().getXpPerMinute() * i.getItemMeta().getPersistentDataContainer().get(plugin.KEYS.MULTIPLIER_KEY, PersistentDataType.INTEGER)));
+        }
+        return xp;
     }
 }
