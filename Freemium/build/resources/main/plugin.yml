@@ -1,0 +1,9 @@
+name: Better_Spawners
+main: me.silentprogram.betterspawnersfree.BetterSpawners
+version: 1.0.0
+api-version: 1.16
+description: Custom lag-free spawners plugin.
+
+commands:
+  spawners:
+    description: Opens the spawner gui
