@@ -9,7 +9,6 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.classes.Data;
 import me.silentprogram.betterspawners.interfaces.GuiManagerAbstract;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -20,7 +19,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
-import java.util.UUID;
 
 public class GuiManager extends GuiManagerAbstract {
     private final StartupClass plugin;
@@ -109,7 +107,7 @@ public class GuiManager extends GuiManagerAbstract {
         });
         //Set functionality on gui close.
         gui.setOnClose(event -> {
-            if(gui.getViewers().size() > 1) return;
+            if (gui.getViewers().size() > 1) return;
             removeGuiFromList(guiPlr);
         });
         
@@ -167,15 +165,17 @@ public class GuiManager extends GuiManagerAbstract {
             plr.playSound(plr.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
             ItemStack item = xpItem.getItem();
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("Click to collect 0 xp!");
-            item.setItemMeta(meta);
+
             
             List<ItemStack> itemStacks = dataConfig.getPlayerItems(guiPlr.getUniqueId());
             for (ItemStack i : itemStacks) {
-                i.getItemMeta().getPersistentDataContainer().set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
+                ItemMeta iMeta = i.getItemMeta();
+                iMeta.getPersistentDataContainer().set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
+                i.setItemMeta(iMeta);
             }
             dataConfig.putPlayerItems(guiPlr.getUniqueId(), itemStacks);
-            
+            meta.setDisplayName("Click to collect 0 xp!");
+            item.setItemMeta(meta);
             plr.giveExp(newXp);
             gui.update();
         });
