@@ -36,7 +36,7 @@ public class SpawnerListener implements Listener {
         if(!configManager.canPlayerSilk(plr)) return;
         
         block.getWorld().dropItemNaturally(block.getLocation(),
-                SpawnerManager.createSpawner(plugin, spawner.getSpawnedType(), plugin.getConfigManager().getMinedMultiplier(), System.currentTimeMillis(), plr.getName()));
+                SpawnerManager.createSpawner(plugin, spawner.getSpawnedType(), plugin.getConfigManager().getMinedMultiplier(), plr.getName()));
         
         event.setExpToDrop(0);
     }

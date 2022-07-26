@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class SpawnerManager {
     
-    private static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, long lastGen, boolean isMined, String creatorName) {
+    private static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, boolean isMined, String creatorName) {
         ItemStack spawner = new ItemStack(Material.SPAWNER);
         List<String> lore = new ArrayList<>();
         
@@ -49,7 +49,7 @@ public class SpawnerManager {
         
         spawnerData.set(plugin.KEYS.ENTITY_TYPE_KEY, PersistentDataType.STRING, spawnerType.name());
         spawnerData.set(plugin.KEYS.MULTIPLIER_KEY, PersistentDataType.INTEGER, multiplier);
-        spawnerData.set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, lastGen);
+        spawnerData.set(plugin.KEYS.LAST_GEN_KEY, PersistentDataType.LONG, System.currentTimeMillis());
         
         spawnerMeta.setLore(lore);
         spawner.setItemMeta(spawnerMeta);
@@ -62,11 +62,10 @@ public class SpawnerManager {
      * @param plugin Instance of main class.
      * @param spawnerType Entity type used for spawner.
      * @param multiplier Xp multiplier.
-     * @param lastGen Last time xp was claimed for spawner.
      * @return Returns a spawner created from the properties provided.
      */
-    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, long lastGen) {
-        return createSpawner(plugin, spawnerType, multiplier, lastGen, false, "");
+    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier) {
+        return createSpawner(plugin, spawnerType, multiplier, false, "");
     }
     
     /**
@@ -74,11 +73,10 @@ public class SpawnerManager {
      * @param plugin Instance of main class.
      * @param spawnerType Entity type used for spawner.
      * @param multiplier Xp multiplier.
-     * @param lastGen Last time xp was claimed for spawner.
      * @param creatorName The name of the player that mined this spawner.
      * @return Returns a spawner created from the properties provided.
      */
-    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, long lastGen, String creatorName) {
-        return createSpawner(plugin, spawnerType, multiplier, lastGen, true, creatorName);
+    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, String creatorName) {
+        return createSpawner(plugin, spawnerType, multiplier, true, creatorName);
     }
 }
