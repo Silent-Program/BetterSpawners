@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class SpawnerManager {
     
-    private static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, boolean isMined, String creatorName) {
+    private static ItemStack createSpawner(StartupClass plugin, SpawnerType spawnerType, int multiplier, boolean isMined, String creatorName) {
         ItemStack spawner = new ItemStack(Material.SPAWNER);
         List<String> lore = new ArrayList<>();
         
@@ -64,7 +64,7 @@ public class SpawnerManager {
      * @param multiplier Xp multiplier.
      * @return Returns a spawner created from the properties provided.
      */
-    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier) {
+    public static ItemStack createSpawner(StartupClass plugin, SpawnerType spawnerType, int multiplier) {
         return createSpawner(plugin, spawnerType, multiplier, false, "");
     }
     
@@ -76,7 +76,7 @@ public class SpawnerManager {
      * @param creatorName The name of the player that mined this spawner.
      * @return Returns a spawner created from the properties provided.
      */
-    public static ItemStack createSpawner(StartupClass plugin, EntityType spawnerType, int multiplier, String creatorName) {
+    public static ItemStack createSpawner(StartupClass plugin, SpawnerType spawnerType, int multiplier, String creatorName) {
         return createSpawner(plugin, spawnerType, multiplier, true, creatorName);
     }
 }

@@ -2,6 +2,7 @@ package me.silentprogram.betterspawners.commands;
 
 import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.util.SpawnerManager;
+import me.silentprogram.betterspawners.util.SpawnerType;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -57,10 +58,10 @@ public class MainCommand implements CommandExecutor {
                         return true;
                     }
                     
-                    EntityType entityType;
+                    SpawnerType entityType;
                     
                     try {
-                        entityType = EntityType.valueOf(args[2].toUpperCase());
+                        entityType = SpawnerType.valueOf(args[2].toUpperCase());
                     } catch (IllegalArgumentException e) {
                         commandSender.sendMessage("No such spawner type exists!");
                         return true;

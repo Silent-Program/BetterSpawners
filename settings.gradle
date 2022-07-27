@@ -1,2 +1,2 @@
 rootProject.name = "BetterSpawners"
-include 'Freemium'
+include 'Freemium', 'Premium'

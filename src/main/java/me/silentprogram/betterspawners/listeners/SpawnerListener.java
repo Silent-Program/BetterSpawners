@@ -3,6 +3,7 @@ package me.silentprogram.betterspawners.listeners;
 import me.silentprogram.betterspawners.StartupClass;
 import me.silentprogram.betterspawners.config.ConfigManager;
 import me.silentprogram.betterspawners.util.SpawnerManager;
+import me.silentprogram.betterspawners.util.SpawnerType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -36,7 +37,7 @@ public class SpawnerListener implements Listener {
         if(!configManager.canPlayerSilk(plr)) return;
         
         block.getWorld().dropItemNaturally(block.getLocation(),
-                SpawnerManager.createSpawner(plugin, spawner.getSpawnedType(), plugin.getConfigManager().getMinedMultiplier(), plr.getName()));
+                SpawnerManager.createSpawner(plugin, SpawnerType.valueOf(spawner.getSpawnedType().toString()), plugin.getConfigManager().getMinedMultiplier(), plr.getName()));
         
         event.setExpToDrop(0);
     }

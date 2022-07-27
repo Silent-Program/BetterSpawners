@@ -22,7 +22,9 @@ public class StartupClass {
         dataConfig = dataManager.getConfig();
     }
     
-    //Essentially just onEnable();
+    /**
+     * Used for plugin startup
+     */
     public void startup() {
         plugin.saveDefaultConfig();
         startBstats();
@@ -31,7 +33,9 @@ public class StartupClass {
         initialize();
     }
     
-    //Essentially just onDisable();
+    /**
+     * Used for plugin shutdown
+     */
     public void shutdown() {
         dataManager.saveConfig();
     }
